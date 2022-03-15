@@ -15,7 +15,7 @@ const App = () => {
   const [allWaves, setAllWaves] = useState([]);
   console.log("currentAccount: ", currentAccount);
   /* デプロイされたコントラクトのアドレスを保持する変数を作成 */
-  const contractAddress = "0x01161cEd45fd8368Eccef123B0CD447464b0e2fa";
+  const contractAddress = "0x32F46e9eF22293354e8E8C189077C3d511e6EbE0";
   /* コントラクトからすべてのwavesを取得するメソッドを作成 */
   /* ABIの内容を参照する変数を作成 */
   const contractABI = abi.abi;
@@ -146,6 +146,25 @@ const App = () => {
     }
   }
 
+  const like = async (count) => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        /* ABIを参照 */
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        /* コントラクトに👋（wave）を書き込む */
+        console.log("count:",count)
+        
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   /* WEBページがロードされたときに下記の関数を実行 */
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -191,10 +210,13 @@ const App = () => {
         allWaves.slice(0).reverse().map((wave, index) => {
           return (
             <div key={index} style={{ backgroundColor: "#F8F8FF", marginTop: "16px", padding: "8px" }}>
+              <div>Count: {index}</div>
               <div>Address: {wave.address}</div>
               <div>Time: {wave.timestamp.toString()}</div>
               <div>Message: {wave.message}</div>
-            </div>)
+              <div>Liked: <button className="waveButton" onClick={like({index})}>like</button></div>
+            </div>
+          ) 
         })
         )}
       </div>
