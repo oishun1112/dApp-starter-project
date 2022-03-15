@@ -52,33 +52,33 @@ const App = () => {
      * `emit`されたイベントをフロントエンドに反映させる
      */
     useEffect(() => {
-    let wavePortalContract;
+      let wavePortalContract;
 
-    const onNewWave = (from, timestamp, message) => {
-      console.log("NewWave", from, timestamp, message);
-      setAllWaves(prevState => [
-      ...prevState,
-      {
-        address: from,
-        timestamp: new Date(timestamp * 1000),
-        message: message,
-      },
-      ]);
-    };
-    /* NewWaveイベントがコントラクトから発信されたときに、情報をを受け取ります */
-    if (window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const onNewWave = (from, timestamp, message) => {
+        console.log("NewWave", from, timestamp, message);
+        setAllWaves(prevState => [
+        ...prevState,
+        {
+          address: from,
+          timestamp: new Date(timestamp * 1000),
+          message: message,
+        },
+        ]);
+      };
+      /* NewWaveイベントがコントラクトから発信されたときに、情報をを受け取ります */
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
 
-      wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
-      wavePortalContract.on("NewWave", onNewWave);
-    }
-    /*メモリリークを防ぐために、NewWaveのイベントを解除します*/
-    return () => {
-      if (wavePortalContract) {
-      wavePortalContract.off("NewWave", onNewWave);
+        wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        wavePortalContract.on("NewWave", onNewWave);
       }
-    };
+      /*メモリリークを防ぐために、NewWaveのイベントを解除します*/
+      return () => {
+        if (wavePortalContract) {
+        wavePortalContract.off("NewWave", onNewWave);
+        }
+      };
     }, []);
 
   /* window.ethereumにアクセスできることを確認 */
@@ -154,7 +154,6 @@ const App = () => {
         const signer = provider.getSigner();
         /* ABIを参照 */
         const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
-        /* コントラクトに👋（wave）を書き込む */
         console.log("count:",count)
         
       } else {
@@ -174,7 +173,7 @@ const App = () => {
     <div className="mainContainer">
       <div className="dataContainer">
         <div className="header">
-        <span role="img" aria-label="hand-wave">👋</span> WELCOME!
+        <span role="img" aria-label="hand-wave">🍀</span>,<span role="img" aria-label="hand-wave">🍀</span>
         </div>
         <div className="bio">
           イーサリアムウォレットを接続して、メッセージを作成したら、<span role="img" aria-label="hand-wave">👋</span>を送ってください<span role="img" aria-label="shine">✨</span>
@@ -214,7 +213,7 @@ const App = () => {
               <div>Address: {wave.address}</div>
               <div>Time: {wave.timestamp.toString()}</div>
               <div>Message: {wave.message}</div>
-              <div>Liked: <button className="waveButton" onClick={like({index})}>like</button></div>
+              <div>Liked: <button className="waveButton" onClick={like}>like</button></div>
             </div>
           ) 
         })
